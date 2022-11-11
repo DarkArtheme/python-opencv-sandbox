@@ -130,4 +130,5 @@ dmypy.json
 
 .idea/
 data/other/*
-output/*
+output/**/*.png
+output/**/*.jpg

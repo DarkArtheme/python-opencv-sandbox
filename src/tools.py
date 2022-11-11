@@ -34,11 +34,11 @@ def write_dataset(directory: str, images, prefix: str):
 
 
 def sign_image(image, text: str):
-    text_image = np.full(image.shape, 255, dtype=image.dtype)
+    text_image = np.full((64, 256), 255, dtype=image.dtype)
 
     # text_image = cv2.resize(text_image, (256, 128))
     font = cv2.FONT_HERSHEY_DUPLEX
-    bottom_left_corner_of_text = (2, 64)
+    bottom_left_corner_of_text = (2, 32)
     font_scale = 0.75
     font_color = 0
     thickness = 1

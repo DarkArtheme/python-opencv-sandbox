@@ -4,6 +4,7 @@ import os
 import numpy as np
 from tools import *
 
+
 def sharpening(image):
     """Пример увеличения резкости на изображении"""
     kernel = np.array([[0, 0, 0],
@@ -53,6 +54,23 @@ def median_filter(image):
     return cv2.medianBlur(src=image, ksize=5)
 
 
+def bilateral_filter(image):
+    """
+    Билатеральный фильтр.
+
+    d - Diameter of each pixel neighborhood that is used during filtering. If it is non-positive,
+    it is computed from sigmaSpace
+
+    sigmaColor - Filter sigma in the color space. A larger value of the parameter means that farther colors within
+    the pixel neighborhood will be mixed together, resulting in larger areas of semi-equal color.
+
+    sigmaSpace - Filter sigma in the coordinate space. A larger value of the parameter means that farther pixels
+    will influence each other as long as their colors are close enough. When d > 0, it specifies the neighborhood size
+    regardless of sigmaSpace. Otherwise, d is proportional to sigmaSpace.
+    """
+    return cv2.bilateralFilter(image, d=15, sigmaColor=80, sigmaSpace=80)
+
+
 def main():
     src_img = cv2.imread("./data/cross_0256x0256.png", cv2.IMREAD_GRAYSCALE)
     if src_img is None:
@@ -67,7 +85,8 @@ def main():
     dst3 = sign_image(gaussian_filter(src_img), "Gaussian filter")
     dst4 = sign_image(custom_linear_filter(src_img), "Custom (LoG) filter")
     dst5 = sign_image(median_filter(src_img), "Median filter")
-    res = cv2.hconcat([dst0, dst1, dst2, dst3, dst4, dst5])
+    dst6 = sign_image(bilateral_filter(src_img), "Bilateral filter")
+    res = cv2.hconcat([dst0, dst1, dst2, dst3, dst4, dst5, dst6])
     cv2.namedWindow("result", cv2.WINDOW_NORMAL)
     cv2.imshow("result", res)
     cv2.waitKey(0)

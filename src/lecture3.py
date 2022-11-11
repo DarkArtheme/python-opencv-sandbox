@@ -2,7 +2,7 @@ import cv2
 import os
 
 import numpy as np
-
+from tools import *
 
 def sharpening(image):
     """Пример увеличения резкости на изображении"""
@@ -61,12 +61,13 @@ def main():
     # images = read_dataset("./data/other", cv2.IMREAD_GRAYSCALE)
     # write_dataset("./output/other", images, "grayscale")
 
-    dst1 = sharpening(src_img)
-    dst2 = box_filter(src_img)
-    dst3 = gaussian_filter(src_img)
-    dst4 = custom_linear_filter(src_img)
-    dst5 = median_filter(src_img)
-    res = cv2.hconcat([src_img, dst1, dst2, dst3, dst4, dst5])
+    dst0 = sign_image(src_img, "Original")
+    dst1 = sign_image(sharpening(src_img), "Sharpening")
+    dst2 = sign_image(box_filter(src_img), "Box filter")
+    dst3 = sign_image(gaussian_filter(src_img), "Gaussian filter")
+    dst4 = sign_image(custom_linear_filter(src_img), "Custom (LoG) filter")
+    dst5 = sign_image(median_filter(src_img), "Median filter")
+    res = cv2.hconcat([dst0, dst1, dst2, dst3, dst4, dst5])
     cv2.namedWindow("result", cv2.WINDOW_NORMAL)
     cv2.imshow("result", res)
     cv2.waitKey(0)

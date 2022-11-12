@@ -1,8 +1,7 @@
 import cv2
-import os
 
 import numpy as np
-from tools import *
+from tools import sign_image
 
 
 def sharpening(image):
@@ -78,15 +77,14 @@ def main():
         exit(1)
     # images = read_dataset("./data/other", cv2.IMREAD_GRAYSCALE)
     # write_dataset("./output/other", images, "grayscale")
-
-    dst0 = sign_image(src_img, "Original")
-    dst1 = sign_image(sharpening(src_img), "Sharpening")
-    dst2 = sign_image(box_filter(src_img), "Box filter")
-    dst3 = sign_image(gaussian_filter(src_img), "Gaussian filter")
-    dst4 = sign_image(custom_linear_filter(src_img), "Custom (LoG) filter")
-    dst5 = sign_image(median_filter(src_img), "Median filter")
-    dst6 = sign_image(bilateral_filter(src_img), "Bilateral filter")
-    res = cv2.hconcat([dst0, dst1, dst2, dst3, dst4, dst5, dst6])
+    dst = [sign_image(src_img, "Original")]
+    dst.append(sign_image(sharpening(src_img), "Sharpening"))
+    dst.append(sign_image(box_filter(src_img), "Box filter"))
+    dst.append(sign_image(gaussian_filter(src_img), "Gaussian filter"))
+    dst.append(sign_image(custom_linear_filter(src_img), "Custom (LoG) filter"))
+    dst.append(sign_image(median_filter(src_img), "Median filter"))
+    dst.append(sign_image(bilateral_filter(src_img), "Bilateral filter"))
+    res = cv2.hconcat(dst)
     cv2.namedWindow("result", cv2.WINDOW_NORMAL)
     cv2.imshow("result", res)
     cv2.waitKey(0)

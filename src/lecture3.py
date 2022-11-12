@@ -89,7 +89,7 @@ def main():
     cv2.imshow("result", res)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
-    cv2.imwrite("./output/result.png", res)
+    cv2.imwrite("./output/result_L3.png", res)
 
 
 if __name__ == "__main__":

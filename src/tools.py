@@ -34,7 +34,8 @@ def write_dataset(directory: str, images, prefix: str):
 
 
 def sign_image(image, text: str):
-    text_image = np.full((64, 256), 255, dtype=image.dtype)
+    height, width = image.shape[:2]
+    text_image = np.full((64, width), 255, dtype=image.dtype)
 
     # text_image = cv2.resize(text_image, (256, 128))
     font = cv2.FONT_HERSHEY_DUPLEX

@@ -4,6 +4,9 @@ import numpy as np
 from tools import sign_image
 from morphological_operations import *
 
+# images
+images = ['./data/chess.png', './data/cross_0256x0256.png', './data/letters.jpg', './data/noise.png']
+
 
 def sharpening(image):
     """Пример увеличения резкости на изображении"""
@@ -72,14 +75,13 @@ def bilateral_filter(image):
 
 
 def main():
-    cross = './data/cross_0256x0256.png'
-    chess = './data/chess.png'
-    letters = './data/letters.png'
+    src_images = list(map(lambda x: cv2.imread(x, cv2.IMREAD_GRAYSCALE), images))
 
-    src_img = cv2.imread(chess, cv2.IMREAD_GRAYSCALE)
-    if src_img is None:
-        print('Could not read image')
-        exit(1)
+    for i in src_images:
+        if i is None:
+            print('Could not read image')
+            exit(1)
+
     # images = read_dataset("./data/other", cv2.IMREAD_GRAYSCALE)
     # write_dataset("./output/other", images, "grayscale")
     # dst = [sign_image(src_img, "Original"), sign_image(sharpening(src_img), "Sharpening"),
@@ -88,14 +90,14 @@ def main():
     #        sign_image(median_filter(src_img), "Median filter"),
     #        sign_image(bilateral_filter(src_img), "Bilateral filter")]
 
-    dst = [sign_image(erosion(src_img), "Erosion filter"), sign_image(dilation(src_img), "Dilation filter"),
-           sign_image(opening(src_img), "Opening filter"), sign_image(closing(src_img), "Closing filter")]
+    dst = [sign_image(erosion(src_images[2]), "Erosion filter"), sign_image(dilation(src_images[2]), "Dilation filter"),
+           sign_image(opening(src_images[2]), "Opening filter"), sign_image(closing(src_images[2]), "Closing filter")]
     res = cv2.hconcat(dst)
     cv2.namedWindow("result", cv2.WINDOW_NORMAL)
     cv2.imshow("result", res)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
-    cv2.imwrite("./output/result_L3.png", res)
+    cv2.imwrite("./output/result.png", res)
 
 
 if __name__ == "__main__":

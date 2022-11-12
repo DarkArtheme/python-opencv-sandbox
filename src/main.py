@@ -2,6 +2,7 @@ import cv2
 
 import numpy as np
 from tools import sign_image
+from morphological_operations import *
 
 
 def sharpening(image):
@@ -18,7 +19,7 @@ def sharpening(image):
 def box_filter(image):
     """Бокс фильтр в общем виде"""
     w = 5
-    kernel = np.ones((w, w)) / ((w + 1)*(w + 1))
+    kernel = np.ones((w, w)) / ((w + 1) * (w + 1))
     return cv2.filter2D(src=image, ddepth=-1, kernel=kernel)
 
 
@@ -71,19 +72,24 @@ def bilateral_filter(image):
 
 
 def main():
-    src_img = cv2.imread("./data/cross_0256x0256.png", cv2.IMREAD_GRAYSCALE)
+    cross = './data/cross_0256x0256.png'
+    chess = './data/chess.png'
+    letters = './data/letters.png'
+
+    src_img = cv2.imread(chess, cv2.IMREAD_GRAYSCALE)
     if src_img is None:
         print('Could not read image')
         exit(1)
     # images = read_dataset("./data/other", cv2.IMREAD_GRAYSCALE)
     # write_dataset("./output/other", images, "grayscale")
-    dst = [sign_image(src_img, "Original")]
-    dst.append(sign_image(sharpening(src_img), "Sharpening"))
-    dst.append(sign_image(box_filter(src_img), "Box filter"))
-    dst.append(sign_image(gaussian_filter(src_img), "Gaussian filter"))
-    dst.append(sign_image(custom_linear_filter(src_img), "Custom (LoG) filter"))
-    dst.append(sign_image(median_filter(src_img), "Median filter"))
-    dst.append(sign_image(bilateral_filter(src_img), "Bilateral filter"))
+    # dst = [sign_image(src_img, "Original"), sign_image(sharpening(src_img), "Sharpening"),
+    #        sign_image(box_filter(src_img), "Box filter"), sign_image(gaussian_filter(src_img), "Gaussian filter"),
+    #        sign_image(custom_linear_filter(src_img), "Custom (LoG) filter"),
+    #        sign_image(median_filter(src_img), "Median filter"),
+    #        sign_image(bilateral_filter(src_img), "Bilateral filter")]
+
+    dst = [sign_image(erosion(src_img), "Erosion filter"), sign_image(dilation(src_img), "Dilation filter"),
+           sign_image(opening(src_img), "Opening filter"), sign_image(closing(src_img), "Closing filter")]
     res = cv2.hconcat(dst)
     cv2.namedWindow("result", cv2.WINDOW_NORMAL)
     cv2.imshow("result", res)

@@ -1,7 +1,9 @@
 import os
+import threading
 
 import cv2
 import numpy as np
+from matplotlib import pyplot as plt
 
 
 def read_dataset(directory: str, flag: int):
@@ -49,3 +51,19 @@ def sign_image(image, text: str):
                 font_scale, font_color, thickness, line_type)
 
     return cv2.vconcat([image, text_image])
+
+
+class Histogram(threading.Thread):
+    def __init__(self, img):
+        super(Histogram, self).__init__()
+        self.img = img
+
+    def run(self):
+        plt.figure()
+        plt.xlim([0, 256])
+        histogram, bin_edges = np.histogram(self.img, bins=256, range=(0, 256))
+        plt.plot(bin_edges[0:-1], histogram, color="black")
+        plt.title("Histogram")
+        plt.xlabel("Color value")
+        plt.ylabel("Pixel count")
+        plt.show()

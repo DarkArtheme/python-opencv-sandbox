@@ -1,7 +1,10 @@
+import threading
+
 import cv2
 
 import numpy as np
-from tools import sign_image
+from matplotlib import pyplot as plt
+from tools import sign_image, Histogram
 
 
 def binarize_image(image, thresh, maxval, type):
@@ -37,18 +40,24 @@ def main():
     dst_bin.append(sign_image(bin_images[2], "Thresh_Trunc"))
     dst_bin.append(sign_image(bin_images[3], "Thresh_ToZero"))
 
+    bin_images1 = list()
+    bin_images1.append(sign_image(binarize_image(src_img, 0, 255, cv2.THRESH_BINARY + cv2.THRESH_OTSU), "Otsu"))
+
     dst = [sign_image(bin_images[0], "Original bin image")]
     dst.append(sign_image(closing(bin_images[0]), "Closing"))
     dst.append(sign_image(opening(bin_images[0]), "Opening"))
     dst.append(sign_image(opening(closing(bin_images[0])), "Closing-->Opening"))
     dst.append(sign_image(closing(opening(bin_images[0])), "Opening-->Closing"))
+    for i in range(len(bin_images1), len(dst_bin)):
+        bin_images1.append(np.full((320, 256), 255, dtype=src_img.dtype))
     for i in range(len(dst), len(dst_bin)):
         dst.append(np.full((320, 256), 255, dtype=src_img.dtype))
-
     res1 = cv2.hconcat(dst_bin)
-    res2 = cv2.hconcat(dst)
-
-    res = cv2.vconcat([res1, res2])
+    res2 = cv2.hconcat(bin_images1)
+    res3 = cv2.hconcat(dst)
+    # job_hist = Histogram(src_img)
+    # job_hist.start()
+    res = cv2.vconcat([res1, res2, res3])
     cv2.namedWindow("result", cv2.WINDOW_NORMAL)
     cv2.imshow("result", res)
     cv2.waitKey(0)

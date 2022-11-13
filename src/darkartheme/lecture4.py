@@ -24,7 +24,7 @@ def opening(image):
 
 def main():
     # src_img = cv2.imread("./data/house.jpg", cv2.IMREAD_GRAYSCALE)
-    src_img = cv2.imread("../../data/cross_0256x0256.png", cv2.IMREAD_GRAYSCALE)
+    src_img = cv2.imread(" ./data/cross_0256x0256.png", cv2.IMREAD_GRAYSCALE)
     if src_img is None:
         print('Could not read image')
         exit(1)

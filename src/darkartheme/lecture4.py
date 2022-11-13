@@ -24,7 +24,7 @@ def opening(image):
 
 def main():
     # src_img = cv2.imread("./data/house.jpg", cv2.IMREAD_GRAYSCALE)
-    src_img = cv2.imread("./data/cross_0256x0256.png", cv2.IMREAD_GRAYSCALE)
+    src_img = cv2.imread("../../data/cross_0256x0256.png", cv2.IMREAD_GRAYSCALE)
     if src_img is None:
         print('Could not read image')
         exit(1)
@@ -58,7 +58,7 @@ def main():
     # job_hist = Histogram(src_img)
     # job_hist.start()
     res = cv2.vconcat([res1, res2, res3])
-    cv2.namedWindow("result", cv2.WINDOW_NORMAL)
+    cv2.namedWindow("result", cv2.WINDOW_AUTOSIZE)
     cv2.imshow("result", res)
     cv2.waitKey(0)
     cv2.destroyAllWindows()

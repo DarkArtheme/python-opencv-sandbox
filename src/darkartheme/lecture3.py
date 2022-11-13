@@ -71,7 +71,7 @@ def bilateral_filter(image):
 
 
 def main():
-    src_img = cv2.imread("./data/cross_0256x0256.png", cv2.IMREAD_GRAYSCALE)
+    src_img = cv2.imread("../../data/cross_0256x0256.png", cv2.IMREAD_GRAYSCALE)
     if src_img is None:
         print('Could not read image')
         exit(1)
@@ -85,7 +85,7 @@ def main():
     dst.append(sign_image(median_filter(src_img), "Median filter"))
     dst.append(sign_image(bilateral_filter(src_img), "Bilateral filter"))
     res = cv2.hconcat(dst)
-    cv2.namedWindow("result", cv2.WINDOW_NORMAL)
+    cv2.namedWindow("result", cv2.WINDOW_AUTOSIZE)
     cv2.imshow("result", res)
     cv2.waitKey(0)
     cv2.destroyAllWindows()

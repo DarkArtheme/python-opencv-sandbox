@@ -1,7 +1,6 @@
 import cv2
 
 import numpy as np
-from matplotlib import pyplot as plt
 from tools import sign_image
 
 

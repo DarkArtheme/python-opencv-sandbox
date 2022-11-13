@@ -1,7 +1,7 @@
 import cv2
 
 import numpy as np
-from tools import sign_image
+from src.darkartheme.tools import sign_image
 
 
 def sharpening(image):

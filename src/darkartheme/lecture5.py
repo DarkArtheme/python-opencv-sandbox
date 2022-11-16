@@ -30,8 +30,18 @@ def roberts(image):
     gy = ndimage.convolve(image, kernel_y)
 
     g = np.sqrt(np.square(gx) + np.square(gy))
-    gx, gy, g = (np.asarray(np.clip(el, 0, 255), dtype=np.uint8) for el in (gx, gy, g))
-    return gx, gy, g
+    return (np.asarray(np.clip(el, 0, 255), dtype=np.uint8) for el in (gx, gy, g))
+
+
+def prewitt(image):
+    kernel_x = np.array([[-1, 0, 1] for _ in range(3)])
+    kernel_y = np.transpose(kernel_x)
+
+    gx = cv2.filter2D(image, cv2.CV_16S, kernel_x)
+    gy = cv2.filter2D(image, cv2.CV_16S, kernel_y)
+    g = np.sqrt(np.square(gx) + np.square(gy))
+
+    return (np.asarray(np.clip(el, 0, 255), dtype=np.uint8) for el in (gx, gy, g))
 
 
 def _generate_row(src_img, method_name, func):
@@ -60,6 +70,7 @@ def main():
 
     _create_window(images, "Wrong Roberts", roberts_wrong)
     _create_window(images, "Roberts", roberts)
+    _create_window(images, "Prewitt", prewitt)
 
     cv2.waitKey(0)
     cv2.destroyAllWindows()

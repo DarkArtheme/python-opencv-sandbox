@@ -35,9 +35,13 @@ def write_dataset(directory: str, images, prefix: str):
         i += 1
 
 
-def sign_image(image, text: str):
-    height, width = image.shape[:2]
-    text_image = np.full((64, width), 255, dtype=image.dtype)
+def sign_image(image, text: str, add_border=False, thickness=0):
+    try:
+        height, width, channels = image.shape
+    except ValueError:
+        height, width = image.shape
+        channels = 1
+    text_image = np.full((64, width, channels), 255, dtype=image.dtype)
 
     # text_image = cv2.resize(text_image, (256, 128))
     font = cv2.FONT_HERSHEY_DUPLEX
@@ -49,8 +53,11 @@ def sign_image(image, text: str):
 
     cv2.putText(text_image, text, bottom_left_corner_of_text, font,
                 font_scale, font_color, thickness, line_type)
-
-    return cv2.vconcat([image, text_image])
+    res = cv2.vconcat([image, text_image])
+    if add_border:
+        r = thickness
+        res = cv2.copyMakeBorder(res, top=r, bottom=r, left=r, right=r, borderType=cv2.BORDER_CONSTANT)
+    return res
 
 
 class Histogram(threading.Thread):

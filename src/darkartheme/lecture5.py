@@ -11,10 +11,11 @@ def roberts_wrong(image):
                          [0, -1]])
     kernel_y = np.array([[0, 1],
                          [-1, 0]])
-    gx = cv2.filter2D(image, -1, kernel_x)
-    gy = cv2.filter2D(image, -1, kernel_y)
+    gx = cv2.filter2D(image, cv2.CV_16S, kernel_x)
+    gy = cv2.filter2D(image, cv2.CV_16S, kernel_y)
+    gx, gy = (np.asarray(np.clip(el, 0, 255), dtype=np.uint8) for el in (gx, gy))
     g = cv2.addWeighted(gx, 0.5, gy, 0.5, 0)
-    gx, gy, g = (np.asarray(np.clip(el, 0, 255), dtype=np.uint8) for el in (gx, gy, g))
+    g = (np.asarray(np.clip(g, 0, 255), dtype=np.uint8))
     return gx, gy, g
 
 

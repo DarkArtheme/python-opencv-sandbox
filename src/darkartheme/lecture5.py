@@ -14,6 +14,7 @@ def roberts_wrong(image):
     gx = cv2.filter2D(image, -1, kernel_x)
     gy = cv2.filter2D(image, -1, kernel_y)
     g = cv2.addWeighted(gx, 0.5, gy, 0.5, 0)
+    gx, gy, g = (np.asarray(np.clip(el, 0, 255), dtype=np.uint8) for el in (gx, gy, g))
     return gx, gy, g
 
 
@@ -28,18 +29,16 @@ def roberts(image):
     gy = ndimage.convolve(image, kernel_y)
 
     g = np.sqrt(np.square(gx) + np.square(gy))
-    g = np.asarray(np.clip(g, 0, 255), dtype=np.uint8)
+    gx, gy, g = (np.asarray(np.clip(el, 0, 255), dtype=np.uint8) for el in (gx, gy, g))
     return gx, gy, g
 
 
-def _generate_row(src_img, func):
+def _generate_row(src_img, method_name, func):
     gx, gy, g = func(src_img)
-    gx = np.asarray(np.clip(gx, 0, 255), dtype=np.uint8)
-    gy = np.asarray(np.clip(gy, 0, 255), dtype=np.uint8)
     dst = [sign_image(src_img, "Original")]
-    dst.append(sign_image(gx, "Gx (H1)"))
-    dst.append(sign_image(gy, "Gy (H2)"))
-    dst.append(sign_image(g, "Gradient"))
+    dst.append(sign_image(gx, f"{method_name} Hx"))
+    dst.append(sign_image(gy, f"{method_name} Hy"))
+    dst.append(sign_image(g, f"{method_name} Gradient"))
     return cv2.hconcat(dst)
 
 
@@ -50,16 +49,15 @@ def main():
         exit(1)
     src_img1 = render_circle()
 
-    res1 = cv2.vconcat([_generate_row(src_img1, roberts_wrong),
-                        _generate_row(src_img2, roberts_wrong)])
+    res1 = cv2.vconcat([_generate_row(src_img1, "", roberts_wrong),
+                        _generate_row(src_img2, "", roberts_wrong)])
     cv2.namedWindow("Wrong Roberts", cv2.WINDOW_AUTOSIZE)
     cv2.imshow("Wrong Roberts", res1)
 
-    res2 = cv2.vconcat([_generate_row(src_img1, roberts),
-                        _generate_row(src_img2, roberts)])
+    res2 = cv2.vconcat([_generate_row(src_img1, "Roberts", roberts),
+                        _generate_row(src_img2, "Roberts", roberts)])
     cv2.namedWindow("Right Roberts", cv2.WINDOW_AUTOSIZE)
     cv2.imshow("Right Roberts", res2)
-
     cv2.waitKey(0)
     cv2.destroyAllWindows()
     cv2.imwrite("./output/result_L5-1.png", res2)

@@ -43,25 +43,26 @@ def _generate_row(src_img, method_name, func):
     return cv2.hconcat(dst)
 
 
+def _create_window(images, name, func):
+    res = cv2.vconcat([_generate_row(image, name, func) for image in images])
+    cv2.namedWindow(name, cv2.WINDOW_AUTOSIZE)
+    cv2.imshow(name, res)
+    cv2.imwrite(f"./output/result_L5-{name}.png", res)
+
+
 def main():
     src_img2 = cv2.imread("./data/cross_0256x0256.png", cv2.IMREAD_GRAYSCALE)
     if src_img2 is None:
         print('Could not read image')
         exit(1)
     src_img1 = render_circle()
+    images = [src_img1, src_img2]
 
-    res1 = cv2.vconcat([_generate_row(src_img1, "", roberts_wrong),
-                        _generate_row(src_img2, "", roberts_wrong)])
-    cv2.namedWindow("Wrong Roberts", cv2.WINDOW_AUTOSIZE)
-    cv2.imshow("Wrong Roberts", res1)
+    _create_window(images, "Wrong Roberts", roberts_wrong)
+    _create_window(images, "Roberts", roberts)
 
-    res2 = cv2.vconcat([_generate_row(src_img1, "Roberts", roberts),
-                        _generate_row(src_img2, "Roberts", roberts)])
-    cv2.namedWindow("Right Roberts", cv2.WINDOW_AUTOSIZE)
-    cv2.imshow("Right Roberts", res2)
     cv2.waitKey(0)
     cv2.destroyAllWindows()
-    cv2.imwrite("./output/result_L5-1.png", res2)
 
 
 if __name__ == "__main__":

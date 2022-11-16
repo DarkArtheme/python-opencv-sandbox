@@ -1,8 +1,5 @@
 import cv2
 
-import numpy as np
-from scipy import ndimage
-from render import render_circle
 from tools import sign_image
 
 

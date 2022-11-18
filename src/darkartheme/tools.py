@@ -60,6 +60,14 @@ def sign_image(image, text: str, add_border=False, thickness=0):
     return res
 
 
+def read_image(path, flag=cv2.IMREAD_UNCHANGED):
+    src_img = cv2.imread(path, flag)
+    if src_img is None:
+        print(f"Could not read image '{path}'")
+        exit(1)
+    return src_img
+
+
 class Histogram(threading.Thread):
     def __init__(self, img):
         super(Histogram, self).__init__()
